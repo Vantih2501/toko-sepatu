@@ -36,4 +36,14 @@ class Produk extends Model
     {
         return $this->hasMany(FotoProduk::class);
     }
+
+    public function keranjang()
+    {
+        return $this->hasMany(Keranjang::class);
+    }
+
+    public function detailTransaksi()
+    {
+        return $this->hasMany(DetailTransaksi::class);
+    }
 }
