@@ -1,130 +1,155 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="id">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>@yield('title', 'Kick Avenue - Authentic Sneakers')</title>
-    <!-- Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-    
+    <title>@yield('title', 'SEP-OKAT')</title>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
-    
     <style>
-        body {
-            font-family: 'Inter', sans-serif;
-            background-color: #f9f9f9;
-        }
-        /* Custom scrollbar */
-        ::-webkit-scrollbar { width: 8px; }
-        ::-webkit-scrollbar-track { background: #f1f1f1; }
-        ::-webkit-scrollbar-thumb { background: #888; border-radius: 4px; }
-        ::-webkit-scrollbar-thumb:hover { background: #555; }
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+        body { font-family: 'Inter', sans-serif; }
     </style>
-    @yield('styles')
 </head>
-<body class="text-zinc-900 antialiased flex flex-col min-h-screen">
-    
+<body class="bg-gray-50 text-gray-900 font-sans antialiased">
     <!-- Navbar -->
-    <nav class="bg-white border-b border-zinc-200 sticky top-0 z-50">
+    <nav class="bg-white border-b border-gray-100 sticky top-0 z-50">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between h-20 items-center">
-                <div class="flex items-center gap-8">
-                    <a href="/" class="text-2xl font-black tracking-tighter uppercase">
-                        KICK<span class="text-zinc-500">AVENUE</span>
+                <!-- Logo -->
+                <div class="flex-shrink-0 flex items-center">
+                    <a href="/" class="text-3xl font-black tracking-tighter uppercase">
+                        SEP-OKAT<span class="text-gray-400">.</span>
                     </a>
-                    <div class="hidden md:flex gap-6 font-medium text-sm">
-                        <a href="/" class="hover:text-zinc-500 transition">SNEAKERS</a>
-                        <a href="/" class="hover:text-zinc-500 transition">STREETWEAR</a>
-                        <a href="/" class="hover:text-zinc-500 transition">ACCESSORIES</a>
-                    </div>
                 </div>
 
-                <div class="flex items-center gap-5">
-                    <!-- Search -->
-                    <div class="relative hidden sm:block">
-                        <input type="text" placeholder="Search products..." class="bg-zinc-100 border-none rounded-full py-2 px-5 text-sm focus:ring-2 focus:ring-black outline-none w-64">
-                    </div>
+                <!-- Search Bar -->
+                <div class="hidden sm:block flex-1 max-w-lg mx-8">
+                    <form action="{{ route('produk.search') }}" method="GET" class="relative group">
+                        <input type="text" name="q" placeholder="Cari sneakers, brands, atau koleksi..." 
+                               class="w-full bg-gray-50 text-sm border-0 rounded-full pl-5 pr-12 py-3 focus:ring-2 focus:ring-black focus:bg-white transition-all shadow-sm group-hover:shadow-md outline-none"
+                               value="{{ request('q') }}">
+                        <button type="submit" class="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-black transition">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+                        </button>
+                    </form>
+                </div>
+
+                <!-- Navigation -->
+                <div class="flex items-center gap-6">
+                    <a href="{{ route('produk.search') }}" class="text-sm font-semibold hover:text-gray-500 transition">Shop</a>
                     
                     @auth
-                        <a href="{{ route('keranjang.index') }}" class="relative hover:text-zinc-600 transition">
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
-                              <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 10.5V6a3.75 3.75 0 10-7.5 0v4.5m11.356-1.993l1.263 12c.07.665-.45 1.243-1.119 1.243H4.25a1.125 1.125 0 01-1.12-1.243l1.264-12A1.125 1.125 0 015.513 7.5h12.974c.576 0 1.059.435 1.119 1.007zM8.625 10.5a.375.375 0 11-.75 0 .375.375 0 01.75 0zm7.5 0a.375.375 0 11-.75 0 .375.375 0 01.75 0z" />
-                            </svg>
+                        @php
+                            $cartCount = \App\Models\Keranjang::where('user_id', Auth::id())->count();
+                        @endphp
+                        <a href="{{ route('keranjang.index') }}" class="relative text-gray-800 hover:text-black transition">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"></path></svg>
+                            @if($cartCount > 0)
+                                <span class="absolute -top-1.5 -right-1.5 bg-black text-white text-[10px] font-bold w-4 h-4 rounded-full flex items-center justify-center">{{ $cartCount }}</span>
+                            @endif
                         </a>
+
                         <div class="relative group">
-                            <button class="flex items-center gap-2 hover:text-zinc-600 transition font-medium text-sm">
-                                <img src="{{ Auth::user()->foto ?? 'https://ui-avatars.com/api/?name='.urlencode(Auth::user()->nama).'&color=fff&background=000' }}" alt="Profile" class="w-8 h-8 rounded-full border border-zinc-200">
+                            <button class="flex items-center gap-2 focus:outline-none">
+                                <div class="w-9 h-9 bg-gray-100 rounded-full flex items-center justify-center font-bold text-sm">
+                                    {{ substr(Auth::user()->nama, 0, 1) }}
+                                </div>
                             </button>
                             <!-- Dropdown -->
-                            <div class="absolute right-0 mt-2 w-48 bg-white border border-zinc-200 shadow-xl rounded-lg py-2 hidden group-hover:block transition z-50">
-                                <a href="/profil" class="block px-4 py-2 text-sm text-zinc-700 hover:bg-zinc-100">My Profile</a>
-                                <a href="{{ route('transaksi.history') }}" class="block px-4 py-2 text-sm text-zinc-700 hover:bg-zinc-100">Purchase History</a>
-                                <form method="POST" action="/logout">
+                            <div class="absolute right-0 mt-2 w-48 bg-white border border-gray-100 rounded-xl shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 py-2">
+                                <div class="px-4 py-2 border-b border-gray-50 mb-2">
+                                    <p class="text-sm font-bold text-gray-900 truncate">{{ Auth::user()->nama }}</p>
+                                    <p class="text-xs text-gray-500 truncate">{{ Auth::user()->email }}</p>
+                                </div>
+                                <a href="{{ route('transaksi.history') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 hover:text-black transition">Pesanan Saya</a>
+                                @if(Auth::user()->role == '1')
+                                    <a href="{{ route('backend.beranda') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 hover:text-black transition">Dashboard Admin</a>
+                                @endif
+                                <form action="{{ route('backend.logout') }}" method="POST">
                                     @csrf
-                                    <button type="submit" class="block w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-zinc-100">Sign Out</button>
+                                    <button type="submit" class="w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-50 transition">Keluar</button>
                                 </form>
                             </div>
                         </div>
                     @else
-                        <a href="{{ route('google.login') }}" class="bg-black text-white px-5 py-2.5 rounded-full text-sm font-semibold hover:bg-zinc-800 transition flex items-center gap-2">
-                            <svg class="w-4 h-4" viewBox="0 0 24 24">
-                                <path fill="currentColor" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" />
-                                <path fill="currentColor" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" />
-                                <path fill="currentColor" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" />
-                                <path fill="currentColor" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" />
-                            </svg>
-                            Sign In
-                        </a>
+                        <a href="{{ route('backend.login') }}" class="text-sm font-semibold hover:text-gray-500 transition">Masuk</a>
+                        <a href="{{ route('backend.login') }}" class="bg-black text-white px-5 py-2.5 rounded-full text-sm font-bold hover:bg-gray-800 transition shadow-sm hover:shadow">Daftar</a>
                     @endauth
                 </div>
             </div>
         </div>
     </nav>
 
-    <!-- Main Content -->
-    <main class="flex-grow">
+    <!-- Flash Messages -->
+    @if(session('success'))
+        <div id="flash-message" class="fixed top-24 left-1/2 -translate-x-1/2 z-50 bg-green-50 text-green-800 px-6 py-3 rounded-full shadow-lg border border-green-100 flex items-center gap-2 text-sm font-semibold transition-all duration-500 translate-y-0 opacity-100">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+            {{ session('success') }}
+        </div>
+    @endif
+    @if(session('error'))
+        <div id="flash-message" class="fixed top-24 left-1/2 -translate-x-1/2 z-50 bg-red-50 text-red-800 px-6 py-3 rounded-full shadow-lg border border-red-100 flex items-center gap-2 text-sm font-semibold transition-all duration-500 translate-y-0 opacity-100">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+            {{ session('error') }}
+        </div>
+    @endif
+
+    <!-- Content -->
+    <main>
         @yield('content')
     </main>
 
     <!-- Footer -->
-    <footer class="bg-black text-white mt-20 py-12">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-1 md:grid-cols-4 gap-8">
-            <div>
-                <h2 class="text-2xl font-black tracking-tighter uppercase mb-4">KICKAVENUE</h2>
-                <p class="text-zinc-400 text-sm leading-relaxed">The safest and most trusted platform to buy and sell authentic sneakers & streetwear in Indonesia.</p>
+    <footer class="bg-white border-t border-gray-100 mt-20">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+                <div class="col-span-1 md:col-span-2">
+                    <a href="/" class="text-2xl font-black tracking-tighter uppercase mb-4 block">
+                        SEP-OKAT<span class="text-gray-400">.</span>
+                    </a>
+                    <p class="text-sm text-gray-500 max-w-sm mb-6">Platform jual-beli sneaker autentik terpercaya di Indonesia. Garansi 100% asli atau uang kembali.</p>
+                </div>
+                <div>
+                    <h4 class="font-bold text-sm uppercase tracking-wider mb-4">Layanan</h4>
+                    <ul class="space-y-3 text-sm text-gray-500">
+                        <li><a href="#" class="hover:text-black transition">Bantuan & FAQ</a></li>
+                        <li><a href="#" class="hover:text-black transition">Lacak Pesanan</a></li>
+                        <li><a href="#" class="hover:text-black transition">Pengembalian</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="font-bold text-sm uppercase tracking-wider mb-4">Perusahaan</h4>
+                    <ul class="space-y-3 text-sm text-gray-500">
+                        <li><a href="#" class="hover:text-black transition">Tentang Kami</a></li>
+                        <li><a href="#" class="hover:text-black transition">Syarat & Ketentuan</a></li>
+                        <li><a href="#" class="hover:text-black transition">Kebijakan Privasi</a></li>
+                    </ul>
+                </div>
             </div>
-            <div>
-                <h3 class="font-semibold mb-4 text-sm uppercase tracking-wider">About Us</h3>
-                <ul class="text-zinc-400 text-sm space-y-2">
-                    <li><a href="#" class="hover:text-white transition">Our Story</a></li>
-                    <li><a href="#" class="hover:text-white transition">Authenticity</a></li>
-                    <li><a href="#" class="hover:text-white transition">Careers</a></li>
-                </ul>
+            <div class="border-t border-gray-100 mt-12 pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
+                <p class="text-xs text-gray-400">&copy; {{ date('Y') }} SEP-OKAT. All rights reserved.</p>
+                <div class="flex items-center gap-4 text-gray-400">
+                    <!-- Social icons dummy -->
+                    <a href="#" class="hover:text-black transition"><svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M24 4.557c-.883.392-1.832.656-2.828.775 1.017-.609 1.798-1.574 2.165-2.724-.951.564-2.005.974-3.127 1.195-.897-.957-2.178-1.555-3.594-1.555-3.179 0-5.515 2.966-4.797 6.045-4.091-.205-7.719-2.165-10.148-5.144-1.29 2.213-.669 5.108 1.523 6.574-.806-.026-1.566-.247-2.229-.616-.054 2.281 1.581 4.415 3.949 4.89-.693.188-1.452.232-2.224.084.626 1.956 2.444 3.379 4.6 3.419-2.07 1.623-4.678 2.348-7.29 2.04 2.179 1.397 4.768 2.212 7.548 2.212 9.142 0 14.307-7.721 13.995-14.646.962-.695 1.797-1.562 2.457-2.549z"/></svg></a>
+                </div>
             </div>
-            <div>
-                <h3 class="font-semibold mb-4 text-sm uppercase tracking-wider">Support</h3>
-                <ul class="text-zinc-400 text-sm space-y-2">
-                    <li><a href="#" class="hover:text-white transition">FAQ</a></li>
-                    <li><a href="#" class="hover:text-white transition">Shipping Info</a></li>
-                    <li><a href="#" class="hover:text-white transition">Returns</a></li>
-                </ul>
-            </div>
-            <div>
-                <h3 class="font-semibold mb-4 text-sm uppercase tracking-wider">Connect</h3>
-                <ul class="text-zinc-400 text-sm space-y-2">
-                    <li><a href="#" class="hover:text-white transition">Instagram</a></li>
-                    <li><a href="#" class="hover:text-white transition">Twitter</a></li>
-                    <li><a href="#" class="hover:text-white transition">Facebook</a></li>
-                </ul>
-            </div>
-        </div>
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-12 pt-8 border-t border-zinc-800 text-zinc-500 text-sm text-center">
-            &copy; {{ date('Y') }} Kick Avenue Clone. All rights reserved.
         </div>
     </footer>
 
-    @yield('scripts')
+    <!-- Scripts -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Flash message auto dismiss
+            const flash = document.getElementById('flash-message');
+            if(flash) {
+                setTimeout(() => {
+                    flash.classList.replace('translate-y-0', '-translate-y-4');
+                    flash.classList.replace('opacity-100', 'opacity-0');
+                    setTimeout(() => flash.remove(), 500);
+                }, 3500);
+            }
+        });
+    </script>
+    @stack('scripts')
 </body>
 </html>

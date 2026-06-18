@@ -23,15 +23,15 @@ class DatabaseSeeder extends Seeder
             'role' => '1',
             'status' => 1,
             'hp' => '08123456789',
-            'password' => bcrypt('P@55word'),
+            'password' => bcrypt('admin123'),
         ]);
         User::factory()->create([
-            'nama' => 'Yuris ALkhalifi',
-            'email' => 'yuris@gmail.com',
+            'nama' => 'Gandara ',
+            'email' => 'gandara@gmail.com',
             'role' => '0',
             'status' => 1,
             'hp' => '08234567890',
-            'password' => bcrypt('P@55word'),
+            'password' => bcrypt('user123'),
         ]);
 
         // KATEGORI
