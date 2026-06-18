@@ -91,6 +91,21 @@ Route::middleware('auth')->group(function () {
         return redirect()->route('keranjang.index')->with('success', 'Produk berhasil ditambahkan ke keranjang!');
     })->name('keranjang.add');
     
+    Route::put('/keranjang/{id}', function($id, Request $request) {
+        $item = Keranjang::where('id', $id)->where('user_id', Auth::id())->firstOrFail();
+        if ($request->action === 'plus') {
+            $item->increment('qty');
+        } elseif ($request->action === 'minus') {
+            if ($item->qty > 1) {
+                $item->decrement('qty');
+            } else {
+                $item->delete();
+                return redirect()->route('keranjang.index')->with('success', 'Item dihapus dari keranjang.');
+            }
+        }
+        return redirect()->route('keranjang.index');
+    })->name('keranjang.update');
+
     Route::delete('/keranjang/{id}', function($id) {
         Keranjang::where('id', $id)->where('user_id', Auth::id())->delete();
         return redirect()->route('keranjang.index')->with('success', 'Item removed');
@@ -111,8 +126,9 @@ Route::middleware('auth')->group(function () {
 
 Route::get('backend/beranda', [BerandaController::class, 'berandaBackend'])->name('backend.beranda')->middleware('auth');
 
-Route::get('backend/login', [LoginController::class, 'loginBackend'])->name('backend.login');
-Route::post('backend/login', [LoginController::class, 'authenticateBackend'])->name('backend.login');
+Route::get('backend/login', [GoogleAuthController::class, 'redirect'])->name('backend.login');
+Route::get('login', [GoogleAuthController::class, 'redirect'])->name('login'); // Added for auth middleware redirect
+Route::post('backend/login', [LoginController::class, 'authenticateBackend']);
 Route::post('backend/logout', [LoginController::class, 'logoutBackend'])->name('backend.logout');
 
 // Route User

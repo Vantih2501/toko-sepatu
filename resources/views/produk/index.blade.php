@@ -88,7 +88,7 @@
                        class="group bg-white rounded-2xl border border-gray-100 shadow-sm hover:shadow-xl transition-all duration-300 overflow-hidden flex flex-col">
                         
                         <div class="relative bg-gray-50 aspect-square flex items-center justify-center p-5 overflow-hidden">
-                            <img src="{{ asset('storage/' . $item->foto) }}" alt="{{ $item->nama_produk }}" class="w-full h-full object-contain mix-blend-multiply group-hover:scale-110 transition duration-500">
+                            <img src="{{ asset('storage/img-produk/' . $item->foto) }}" alt="{{ $item->nama_produk }}" class="w-full h-full object-contain mix-blend-multiply group-hover:scale-110 transition duration-500">
                             <span class="absolute top-3 left-3 bg-black text-white text-[10px] font-bold px-2 py-0.5 rounded-full uppercase">Baru</span>
                         </div>
 

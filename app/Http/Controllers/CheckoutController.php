@@ -59,11 +59,21 @@ class CheckoutController extends Controller
     {
         $user = Auth::user();
 
+        // Update hp dan alamat dari form checkout jika dikirim
+        if ($request->hp || $request->alamat_lengkap) {
+            $user->update(array_filter([
+                'hp'             => $request->hp ?? $user->hp,
+                'alamat_lengkap' => $request->alamat_lengkap ?? $user->alamat_lengkap,
+                'kota_id'        => $request->kota_id ?? $user->kota_id,
+            ]));
+            $user->refresh();
+        }
+
         // Pastikan user sudah mengisi alamat dan no hp
         if (!$user->hp || !$user->alamat_lengkap) {
             return response()->json([
-                'success' => false, 
-                'message' => 'Silakan lengkapi nomor HP dan alamat Anda terlebih dahulu di profil.'
+                'success' => false,
+                'message' => 'Silakan lengkapi nomor HP dan alamat pengiriman Anda.'
             ], 400);
         }
 

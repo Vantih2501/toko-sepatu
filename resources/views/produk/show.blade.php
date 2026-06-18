@@ -19,19 +19,19 @@
         <!-- Left: Image Gallery -->
         <div>
             <div class="bg-gray-50 rounded-2xl p-8 mb-4 border border-gray-100 flex items-center justify-center aspect-square relative overflow-hidden">
-                <img id="main-image" src="{{ asset('storage/' . $produk->foto) }}" alt="{{ $produk->nama_produk }}" class="w-full h-full object-contain mix-blend-multiply transition-transform duration-500 hover:scale-110">
+                <img id="main-image" src="{{ asset('storage/img-produk/' . $produk->foto) }}" alt="{{ $produk->nama_produk }}" class="w-full h-full object-contain mix-blend-multiply transition-transform duration-500 hover:scale-110">
             </div>
             
             <div class="flex gap-4 overflow-x-auto pb-2">
                 <!-- Thumbnail 1 (Utama) -->
-                <button onclick="changeImage('{{ asset('storage/' . $produk->foto) }}', this)" class="thumbnail-btn border-2 border-black rounded-xl p-2 w-20 h-20 flex-shrink-0 bg-gray-50 transition">
-                    <img src="{{ asset('storage/' . $produk->foto) }}" class="w-full h-full object-contain mix-blend-multiply">
+                <button onclick="changeImage('{{ asset('storage/img-produk/' . $produk->foto) }}', this)" class="thumbnail-btn border-2 border-black rounded-xl p-2 w-20 h-20 flex-shrink-0 bg-gray-50 transition">
+                    <img src="{{ asset('storage/img-produk/' . $produk->foto) }}" class="w-full h-full object-contain mix-blend-multiply">
                 </button>
                 
                 @if(isset($produk->fotoProduk) && $produk->fotoProduk->count() > 0)
                     @foreach($produk->fotoProduk as $fp)
-                    <button onclick="changeImage('{{ asset('storage/' . $fp->foto) }}', this)" class="thumbnail-btn border-2 border-transparent hover:border-gray-300 rounded-xl p-2 w-20 h-20 flex-shrink-0 bg-gray-50 transition">
-                        <img src="{{ asset('storage/' . $fp->foto) }}" class="w-full h-full object-contain mix-blend-multiply">
+                    <button onclick="changeImage('{{ asset('storage/img-produk/' . $fp->foto) }}', this)" class="thumbnail-btn border-2 border-transparent hover:border-gray-300 rounded-xl p-2 w-20 h-20 flex-shrink-0 bg-gray-50 transition">
+                        <img src="{{ asset('storage/img-produk/' . $fp->foto) }}" class="w-full h-full object-contain mix-blend-multiply">
                     </button>
                     @endforeach
                 @endif
@@ -51,7 +51,7 @@
 
             <!-- Description -->
             <div class="prose prose-sm text-gray-600 mb-8 border-y border-gray-100 py-6">
-                <p>{!! nl2br(e($produk->detail)) !!}</p>
+                {!! $produk->detail !!}
             </div>
 
             <form action="{{ route('keranjang.add') }}" method="POST" id="add-to-cart-form" class="mt-auto">
