@@ -55,14 +55,12 @@
             <b class="logo-icon ps-2">
               <!--You can put here icon as well // <i class="wi wi-sunset"></i> //-->
               <!-- Dark Logo icon -->
-              <img src="{{ asset('backend/image/icon_univ_bsi.png') }}" alt="homepage" class="light-logo"
-                width="25" />
+              <img src="{{ asset('img/logo.png') }}" alt="homepage" class="light-logo" style="max-height: 35px;" />
             </b>
             <!--End Logo icon -->
             <!-- Logo text -->
             <span class="logo-text ms-2">
               <!-- dark Logo text -->
-              <img src="{{ asset('backend/image/logo_text.png') }}" alt="homepage" class="light-logo" />
             </span>
             <!-- Logo icon -->
             <!-- <b class="logo-icon"> -->
@@ -164,22 +162,13 @@
                 </li>
               </ul>
             </li>
-            <li class="sidebar-item"> <a class="sidebar-link has-arrow waveseffect waves-dark" href="#"
-                aria-expanded="false"><i class="mdi mdi-file-pdf-box"></i><span class="hide-menu">Laporan </span></a>
-              <ul aria-expanded="false" class="collapse first-level">
-                <li class="sidebar-item"><a href="{{ route('backend.laporan.formuser') }}" class="sidebar-link"><i
-                      class="mdi mdi-chevron-right"></i><span class="hide-menu"> User
-                    </span></a>
-                </li>
-                <li class="sidebar-item"><a href="{{ route('backend.laporan.formproduk') }}" class="sidebar-link"><i
-                      class="mdi mdi-chevron-right"></i><span class="hide-menu"> Produk
-                    </span></a>
-                </li>
-                <li class="sidebar-item"><a href="{{ route('backend.laporan.formtransaksi') }}" class="sidebar-link"><i
-                      class="mdi mdi-chevron-right"></i><span class="hide-menu"> Transaksi
-                    </span></a>
-                </li>
-              </ul>
+            <li class="sidebar-item">
+              <a class="sidebar-link waves-effect waves-dark sidebar-link" href="{{ route('backend.lelang.index') }}"
+                aria-expanded="false"><i class="mdi mdi-gavel"></i><span class="hide-menu">Order Lelang</span></a>
+            </li>
+            <li class="sidebar-item">
+              <a class="sidebar-link waves-effect waves-dark sidebar-link" href="{{ route('backend.transaksi.index') }}"
+                aria-expanded="false"><i class="mdi mdi-cart"></i><span class="hide-menu">Order</span></a>
             </li>
           </ul>
         </nav>

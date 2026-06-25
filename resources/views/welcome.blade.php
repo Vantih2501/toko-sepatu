@@ -97,6 +97,53 @@
     </div>
 </div>
 
+<!-- Auction Section -->
+@if(isset($lelangs) && !$lelangs->isEmpty())
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 border-t border-gray-100">
+    <div class="flex justify-between items-end mb-8">
+        <div>
+            <h2 class="text-3xl font-black uppercase tracking-tight">Active Auctions</h2>
+            <p class="text-zinc-500 mt-1">Bid & win exclusive sneakers at the best price.</p>
+        </div>
+        <a href="{{ route('lelang.index') }}" class="text-sm font-semibold border-b border-black pb-1 hover:text-zinc-600 transition hidden sm:block">View All Auctions</a>
+    </div>
+
+    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+        @foreach($lelangs as $lelang)
+        <a href="{{ route('lelang.show', $lelang->id) }}" class="group relative bg-white border border-zinc-100 p-4 rounded-xl hover:shadow-2xl transition duration-300">
+            <div class="aspect-square bg-zinc-100 rounded-lg mb-4 overflow-hidden relative flex items-center justify-center p-4">
+                @if($lelang->produk && $lelang->produk->foto)
+                    <img src="{{ asset('storage/img-produk/' . $lelang->produk->foto) }}" alt="{{ $lelang->produk->nama_produk }}" class="object-contain w-full h-full mix-blend-multiply group-hover:scale-105 transition duration-500">
+                @else
+                    <div class="w-full h-full flex items-center justify-center text-gray-300">
+                        <svg class="w-12 h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+                    </div>
+                @endif
+                <div class="absolute top-3 left-3 bg-red-500 text-white text-[10px] font-bold px-2 py-0.5 rounded-full flex items-center gap-1 animate-pulse uppercase tracking-wider">
+                    <span class="w-1.5 h-1.5 bg-white rounded-full"></span> Live Bid
+                </div>
+            </div>
+            <div>
+                <h3 class="font-bold text-lg leading-tight mb-1 group-hover:underline decoration-2 underline-offset-2">{{ $lelang->produk->nama_produk ?? '-' }}</h3>
+                <p class="text-xs text-gray-400 mb-1">Starting Price: Rp {{ number_format($lelang->harga_awal, 0, ',', '.') }}</p>
+                <p class="font-black text-xl text-red-600">
+                    @if($lelang->bids->count() > 0)
+                        Rp {{ number_format($lelang->bids->max('jumlah_bid'), 0, ',', '.') }}
+                    @else
+                        Rp {{ number_format($lelang->harga_awal, 0, ',', '.') }}
+                    @endif
+                </p>
+                <div class="mt-3 pt-3 border-t border-zinc-100 flex items-center justify-between text-xs text-zinc-500">
+                    <span class="countdown-timer" data-end="{{ $lelang->tgl_akhir->toIso8601String() }}">Loading...</span>
+                    <span>{{ $lelang->bids->count() }} bids</span>
+                </div>
+            </div>
+        </a>
+        @endforeach
+    </div>
+</div>
+@endif
+
 <!-- Features Section -->
 <div class="bg-gray-50 py-16 border-t border-gray-100 mt-10">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -141,4 +188,32 @@
     </div>
 </div>
 @endsection
+
+@push('scripts')
+<script>
+    function updateCountdowns() {
+        document.querySelectorAll('.countdown-timer').forEach(el => {
+            const end = new Date(el.dataset.end);
+            const now = new Date();
+            const diff = end - now;
+            if (diff <= 0) {
+                el.textContent = 'Ended';
+                el.classList.add('text-red-500', 'font-semibold');
+                return;
+            }
+            const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const mins = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+            const secs = Math.floor((diff % (1000 * 60)) / 1000);
+            if (days > 0) {
+                el.textContent = `${days}d ${hours}h ${mins}m`;
+            } else {
+                el.textContent = `${hours}h ${mins}m ${secs}s`;
+            }
+        });
+    }
+    updateCountdowns();
+    setInterval(updateCountdowns, 1000);
+</script>
+@endpush
 

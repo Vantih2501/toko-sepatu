@@ -37,6 +37,7 @@
                 <!-- Navigation -->
                 <div class="flex items-center gap-6">
                     <a href="{{ route('produk.search') }}" class="text-sm font-semibold hover:text-gray-500 transition">Shop</a>
+                    <a href="{{ route('lelang.index') }}" class="text-sm font-semibold hover:text-gray-500 transition">Lelang</a>
                     
                     @auth
                         @php
@@ -72,8 +73,7 @@
                             </div>
                         </div>
                     @else
-                        <a href="{{ route('backend.login') }}" class="text-sm font-semibold hover:text-gray-500 transition">Masuk</a>
-                        <a href="{{ route('backend.login') }}" class="bg-black text-white px-5 py-2.5 rounded-full text-sm font-bold hover:bg-gray-800 transition shadow-sm hover:shadow">Daftar</a>
+                        <a href="{{ route('backend.login') }}" class="bg-black text-white px-5 py-2.5 rounded-full text-sm font-bold hover:bg-gray-800 transition shadow-sm hover:shadow">Masuk</a>
                     @endauth
                 </div>
             </div>

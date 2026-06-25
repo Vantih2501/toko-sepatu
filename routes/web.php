@@ -15,7 +15,13 @@ use Illuminate\Support\Facades\Auth;
 
 Route::get('/', function () {
     $produk = Produk::where('status', 1)->with('kategori')->orderBy('created_at', 'desc')->take(8)->get();
-    return view('welcome', compact('produk'));
+    $lelangs = \App\Models\Lelang::with(['produk', 'bids'])
+        ->where('status', 'Ongoing')
+        ->where('tgl_akhir', '>', now())
+        ->orderBy('tgl_akhir', 'asc')
+        ->take(4)
+        ->get();
+    return view('welcome', compact('produk', 'lelangs'));
 });
 
 Route::get('/produk/{id}', function($id) {
@@ -171,7 +177,23 @@ Route::delete('foto-produk/{id}', [ProdukController::class, 'destroyFoto'])->nam
 Route::get('backend/laporan/formproduk', [ProdukController::class, 'formProduk'])->name('backend.laporan.formproduk')->middleware('auth');
 Route::post('backend/laporan/cetakproduk', [ProdukController::class, 'cetakProduk'])->name('backend.laporan.cetakproduk')->middleware('auth');
 
-// Route Transaksi Laporan
+// Route Transaksi Laporan & Manajemen
 use App\Http\Controllers\TransaksiController;
-Route::get('backend/laporan/formtransaksi', [TransaksiController::class, 'formTransaksi'])->name('backend.laporan.formtransaksi')->middleware('auth');
+Route::get('backend/transaksi', [TransaksiController::class, 'index'])->name('backend.transaksi.index')->middleware('auth');
+Route::put('backend/transaksi/{id}/status', [TransaksiController::class, 'updateStatus'])->name('backend.transaksi.updateStatus')->middleware('auth');
+Route::put('backend/transaksi/{id}/resi', [TransaksiController::class, 'updateResi'])->name('backend.transaksi.updateResi')->middleware('auth');
+Route::delete('backend/transaksi/{id}', [TransaksiController::class, 'destroy'])->name('backend.transaksi.destroy')->middleware('auth');
 Route::post('backend/laporan/cetaktransaksi', [TransaksiController::class, 'cetakTransaksi'])->name('backend.laporan.cetaktransaksi')->middleware('auth');
+
+// Route Lelang (Backend Admin)
+use App\Http\Controllers\LelangController;
+Route::get('backend/lelang', [LelangController::class, 'index'])->name('backend.lelang.index')->middleware('auth');
+Route::get('backend/lelang/create', [LelangController::class, 'create'])->name('backend.lelang.create')->middleware('auth');
+Route::post('backend/lelang', [LelangController::class, 'store'])->name('backend.lelang.store')->middleware('auth');
+Route::put('backend/lelang/{id}/status', [LelangController::class, 'updateStatus'])->name('backend.lelang.updateStatus')->middleware('auth');
+Route::delete('backend/lelang/{id}', [LelangController::class, 'destroy'])->name('backend.lelang.destroy')->middleware('auth');
+
+// Route Lelang (Frontend)
+Route::get('/lelang', [LelangController::class, 'frontIndex'])->name('lelang.index');
+Route::get('/lelang/{id}', [LelangController::class, 'frontShow'])->name('lelang.show');
+Route::post('/lelang/{id}/bid', [LelangController::class, 'placeBid'])->name('lelang.bid')->middleware('auth');

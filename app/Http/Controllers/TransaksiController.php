@@ -8,6 +8,58 @@ use Illuminate\Http\Request;
 
 class TransaksiController extends Controller
 {
+    public function index(Request $request)
+    {
+        $query = Transaksi::with(['user', 'detail.produk']);
+
+        // Filter by status
+        if ($request->filled('status')) {
+            $query->where('status_pembayaran', $request->status);
+        }
+
+        // Filter by date range
+        if ($request->filled('start_date')) {
+            $query->whereDate('created_at', '>=', $request->start_date);
+        }
+        if ($request->filled('end_date')) {
+            $query->whereDate('created_at', '<=', $request->end_date);
+        }
+
+        $transaksi = $query->orderBy('created_at', 'desc')->get();
+
+        return view('backend.v_transaksi.index', [
+            'judul' => 'Order Checkout',
+            'transaksi' => $transaksi,
+        ]);
+    }
+
+    public function updateStatus(Request $request, $id)
+    {
+        $transaksi = Transaksi::findOrFail($id);
+        $request->validate([
+            'status_pembayaran' => 'required|in:pending,sukses',
+        ]);
+        $transaksi->update(['status_pembayaran' => $request->status_pembayaran]);
+        return redirect()->route('backend.transaksi.index')->with('success', 'Status pembayaran berhasil diubah.');
+    }
+
+    public function updateResi(Request $request, $id)
+    {
+        $transaksi = Transaksi::findOrFail($id);
+        $request->validate([
+            'resi' => 'required|string|max:255',
+        ]);
+        $transaksi->update(['resi' => $request->resi]);
+        return redirect()->route('backend.transaksi.index')->with('success', 'Nomor resi berhasil diupdate.');
+    }
+
+    public function destroy($id)
+    {
+        $transaksi = Transaksi::findOrFail($id);
+        $transaksi->delete();
+        return redirect()->route('backend.transaksi.index')->with('success', 'Order berhasil dihapus.');
+    }
+
     public function formTransaksi()
     {
         return view('backend.v_transaksi.form', [
@@ -40,7 +92,6 @@ class TransaksiController extends Controller
         ];
 
         $pdf = Pdf::loadView('backend.v_transaksi.cetak', $data);
-        // Set paper size if needed, e.g. $pdf->setPaper('A4', 'landscape');
         return $pdf->stream('Laporan Transaksi.pdf');
     }
 }
