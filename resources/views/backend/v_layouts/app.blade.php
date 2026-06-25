@@ -175,6 +175,10 @@
                       class="mdi mdi-chevron-right"></i><span class="hide-menu"> Produk
                     </span></a>
                 </li>
+                <li class="sidebar-item"><a href="{{ route('backend.laporan.formtransaksi') }}" class="sidebar-link"><i
+                      class="mdi mdi-chevron-right"></i><span class="hide-menu"> Transaksi
+                    </span></a>
+                </li>
               </ul>
             </li>
           </ul>

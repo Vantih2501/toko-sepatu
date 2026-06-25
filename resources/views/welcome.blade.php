@@ -96,5 +96,49 @@
         @endforelse
     </div>
 </div>
+
+<!-- Features Section -->
+<div class="bg-gray-50 py-16 border-t border-gray-100 mt-10">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-10 text-center">
+            <!-- Feature 1 -->
+            <div class="bg-white p-8 rounded-3xl shadow-sm border border-gray-100 hover:shadow-md transition">
+                <div class="w-16 h-16 bg-black text-white rounded-2xl flex items-center justify-center mx-auto mb-6 transform rotate-3">
+                    <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path></svg>
+                </div>
+                <h3 class="font-black text-lg mb-2 uppercase tracking-tight">100% Authentic</h3>
+                <p class="text-gray-500 text-sm">Setiap pasang sepatu telah melewati proses verifikasi ketat oleh para ahli kami. Garansi keaslian atau uang kembali.</p>
+            </div>
+            <!-- Feature 2 -->
+            <div class="bg-white p-8 rounded-3xl shadow-sm border border-gray-100 hover:shadow-md transition">
+                <div class="w-16 h-16 bg-black text-white rounded-2xl flex items-center justify-center mx-auto mb-6 transform -rotate-3">
+                    <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+                </div>
+                <h3 class="font-black text-lg mb-2 uppercase tracking-tight">Fast Delivery</h3>
+                <p class="text-gray-500 text-sm">Pengiriman instan untuk wilayah tertentu dan reguler cepat ke seluruh Indonesia. Anda pesan, kami langsung kirim.</p>
+            </div>
+            <!-- Feature 3 -->
+            <div class="bg-white p-8 rounded-3xl shadow-sm border border-gray-100 hover:shadow-md transition">
+                <div class="w-16 h-16 bg-black text-white rounded-2xl flex items-center justify-center mx-auto mb-6 transform rotate-3">
+                    <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"></path></svg>
+                </div>
+                <h3 class="font-black text-lg mb-2 uppercase tracking-tight">Secure Payment</h3>
+                <p class="text-gray-500 text-sm">Transaksi Anda dijamin aman dengan perlindungan enkripsi terkini dan dukungan berbagai metode pembayaran.</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Newsletter Section -->
+<div class="bg-black text-white py-20 mt-10">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+        <h2 class="text-3xl md:text-4xl font-black mb-4 tracking-tighter uppercase">Never Miss a Drop</h2>
+        <p class="text-gray-400 mb-8 max-w-xl mx-auto text-sm md:text-base">Berlangganan newsletter kami untuk mendapatkan informasi rilisan terbaru, penawaran eksklusif, dan promo spesial khusus untuk Anda.</p>
+        <form class="flex flex-col sm:flex-row gap-3 justify-center max-w-lg mx-auto">
+            <input type="email" placeholder="Masukkan email Anda" class="flex-1 bg-white/10 border border-white/20 text-white placeholder-gray-400 px-6 py-4 rounded-full focus:outline-none focus:border-white focus:bg-white/20 transition">
+            <button type="button" onclick="alert('Terima kasih telah berlangganan!')" class="bg-white text-black px-8 py-4 rounded-full font-bold uppercase tracking-wide hover:bg-gray-200 transition whitespace-nowrap">Subscribe</button>
+        </form>
+    </div>
+</div>
 @endsection
 

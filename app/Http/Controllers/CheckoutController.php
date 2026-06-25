@@ -9,6 +9,7 @@ use Midtrans\Snap;
 use App\Models\Transaksi;
 use App\Models\DetailTransaksi;
 use App\Models\Keranjang;
+use Illuminate\Support\Facades\Log;
 use App\Models\Produk;
 use Illuminate\Support\Facades\Auth;
 
@@ -23,36 +24,78 @@ class CheckoutController extends Controller
         Config::$is3ds = true;
     }
 
+    private function baseUrl()
+    {
+        return rtrim(config('services.rajaongkir.base_url', 'https://rajaongkir.komerce.id/api/v1/'), '/');
+    }
+
     public function getProvinces()
     {
         $response = Http::withHeaders([
             'key' => config('services.rajaongkir.api_key')
-        ])->get('https://api.rajaongkir.com/starter/province');
-        
-        return response()->json($response->json());
+        ])->get($this->baseUrl() . '/destination/province');
+
+        $data = $response->json();
+        // Komerce API: { data: [ {id, name} ] }
+        $provinces = $data['data'] ?? [];
+        $mapped = array_map(fn($p) => [
+            'province_id' => $p['id'],
+            'province'    => $p['name'],
+        ], $provinces);
+
+        return response()->json(['rajaongkir' => ['results' => $mapped]]);
     }
 
     public function getCities($province_id)
     {
+        // Komerce API uses path parameter for province ID
         $response = Http::withHeaders([
             'key' => config('services.rajaongkir.api_key')
-        ])->get('https://api.rajaongkir.com/starter/city?province=' . $province_id);
-        
-        return response()->json($response->json());
+        ])->get($this->baseUrl() . '/destination/city/' . $province_id);
+
+        $data = $response->json();
+        // Expected { data: [ {id, name, type? } ] }
+        $cities = $data['data'] ?? [];
+        $mapped = array_map(fn($c) => [
+            'city_id'   => $c['id'],
+            'city_name' => $c['name'],
+            'type'      => $c['type'] ?? '',
+        ], $cities);
+
+        return response()->json(['rajaongkir' => ['results' => $mapped]]);
     }
 
     public function checkOngkir(Request $request)
     {
+        // Use configurable origin city ID
+        $originCityId = config('services.rajaongkir.origin_city_id', 54); // default origin store city (54 = Kota Bekasi, 55 = Kab. Bekasi)
         $response = Http::withHeaders([
             'key' => config('services.rajaongkir.api_key')
-        ])->post('https://api.rajaongkir.com/starter/cost', [
-            'origin' => 153, // Kota asal contoh: Jakarta Selatan (153)
+        ])->asForm()->post($this->baseUrl() . '/calculate/domestic-cost', [
+            'origin' => $originCityId,
             'destination' => $request->destination_city,
             'weight' => $request->weight,
-            'courier' => $request->courier // jne, pos, tiki
+            'courier' => $request->courier,
         ]);
 
-        return response()->json($response->json());
+        $data = $response->json();
+        Log::info('RajaOngkir cost response', $data);
+        // Komerce API returns { data: [ {service, description, cost: [{value, etd}] } ] }
+        $services = $data['data'] ?? [];
+        $mapped = [[
+            'costs' => array_map(function($s) {
+                return [
+                    'service' => $s['service'] ?? '',
+                    'description' => $s['description'] ?? '',
+                    'cost' => [[
+                        'value' => $s['cost'] ?? 0,
+                        'etd' => $s['etd'] ?? '-',
+                    ]],
+                ];
+            }, $services)
+        ]];
+
+        return response()->json(['rajaongkir' => ['results' => $mapped]]);
     }
 
     public function process(Request $request)

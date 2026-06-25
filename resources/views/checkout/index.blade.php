@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Checkout - SEP-OKAT')
+@section('title', 'Checkout - Walkway')
 
 @section('content')
 <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
@@ -410,10 +410,23 @@ document.getElementById('btn-bayar').addEventListener('click', async function() 
         const data = await res.json();
         if (data.success && data.snapToken) {
             snap.pay(data.snapToken, {
-                onSuccess: function(result) { window.location.href = '{{ route('transaksi.history') }}'; },
+                onSuccess: async function(result) { 
+                    alert('Pembayaran sukses!');
+                    await fetch('{{ route('transaksi.success_callback') }}', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                        },
+                        body: JSON.stringify({ order_id: result.order_id })
+                    });
+                    window.location.href = '{{ route('transaksi.history') }}'; 
+                },
                 onPending: function(result) { window.location.href = '{{ route('transaksi.history') }}'; },
                 onError: function(result) { alert('Pembayaran gagal. Silakan coba lagi.'); },
-                onClose: function() { /* user closed */ }
+                onClose: function() { 
+                    window.location.href = '{{ route('transaksi.history') }}';
+                }
             });
         } else {
             alert(data.message || 'Terjadi kesalahan. Coba lagi.');

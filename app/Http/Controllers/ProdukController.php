@@ -48,6 +48,7 @@ class ProdukController extends Controller
             'harga' => 'required',
             'berat' => 'required',
             'stok' => 'required',
+            'ukuran' => 'nullable|string',
             'foto' => 'required|image|mimes:jpeg,jpg,png,gif|file|max:1024',
         ]);
         $validatedData['status'] = 0;
@@ -159,6 +160,7 @@ class ProdukController extends Controller
             'harga' => 'required',
             'berat' => 'required',
             'stok' => 'required',
+            'ukuran' => 'nullable|string',
             'foto' => 'image|mimes:jpeg,jpg,png,gif|file|max:1024',
         ];
         $validatedData['user_id'] = Auth::user()->id;

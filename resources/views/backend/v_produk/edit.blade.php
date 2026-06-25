@@ -102,6 +102,17 @@
             </div>
 
             <div class="form-group">
+              <label>Ukuran Sepatu</label>
+              <input type="text" name="ukuran"
+                value="{{ old('ukuran', $edit->ukuran) }}" class="form-control @error('ukuran') is-invalid @enderror"
+                placeholder="Contoh: 38, 39, 40">
+              <small class="text-muted">Pisahkan dengan koma jika lebih dari satu ukuran.</small>
+              @error('ukuran')
+                <span class="invalid-feedback alert-danger" role="alert">{{ $message }}</span>
+              @enderror
+            </div>
+
+            <div class="form-group">
               <label>Stok</label>
               <input type="text" onkeypress="return hanyaAngka(event)" name="stok"
                 value="{{ old('stok', $edit->stok) }}" class="form-control @error('stok') is-invalid @enderror"

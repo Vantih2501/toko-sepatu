@@ -114,6 +114,9 @@ Route::middleware('auth')->group(function () {
     // Checkout View
     Route::get('/checkout', function(Request $request) {
         $keranjang = Keranjang::where('user_id', Auth::id())->with('produk')->get();
+        if ($keranjang->isEmpty()) {
+            return redirect()->route('produk.search')->with('error', 'Keranjang Anda kosong. Silakan belanja terlebih dahulu.');
+        }
         return view('checkout.index', compact('keranjang'));
     })->name('checkout.index');
 
@@ -122,6 +125,28 @@ Route::middleware('auth')->group(function () {
         $transaksi = Transaksi::where('user_id', Auth::id())->with(['detail.produk'])->orderBy('created_at', 'desc')->get();
         return view('transaksi.history', compact('transaksi'));
     })->name('transaksi.history');
+
+    // Cek Status Pembayaran (Manual Check / Mock)
+    Route::post('/transaksi/{id}/check-status', function($id) {
+        $transaksi = Transaksi::where('id', $id)->where('user_id', Auth::id())->firstOrFail();
+        
+        if ($transaksi->status_pembayaran === 'pending') {
+            // Untuk simulasi lokal atau jika webhook Midtrans belum aktif:
+            $transaksi->update(['status_pembayaran' => 'sukses']);
+        }
+
+        return redirect()->route('transaksi.history')->with('success', 'Pembayaran Sukses! Status pesanan telah diperbarui menjadi Sudah Dibayar.');
+    })->name('transaksi.check_status');
+
+    // Callback Success from Frontend
+    Route::post('/transaksi/success-callback', function(Request $request) {
+        $order_id = explode('-', $request->order_id)[0];
+        $transaksi = Transaksi::where('id', $order_id)->where('user_id', Auth::id())->first();
+        if ($transaksi) {
+            $transaksi->update(['status_pembayaran' => 'sukses']);
+        }
+        return response()->json(['success' => true]);
+    })->name('transaksi.success_callback');
 });
 
 Route::get('backend/beranda', [BerandaController::class, 'berandaBackend'])->name('backend.beranda')->middleware('auth');
@@ -145,3 +170,8 @@ Route::post('foto-produk/store', [ProdukController::class, 'storeFoto'])->name('
 Route::delete('foto-produk/{id}', [ProdukController::class, 'destroyFoto'])->name('backend.foto_produk.destroy')->middleware('auth');
 Route::get('backend/laporan/formproduk', [ProdukController::class, 'formProduk'])->name('backend.laporan.formproduk')->middleware('auth');
 Route::post('backend/laporan/cetakproduk', [ProdukController::class, 'cetakProduk'])->name('backend.laporan.cetakproduk')->middleware('auth');
+
+// Route Transaksi Laporan
+use App\Http\Controllers\TransaksiController;
+Route::get('backend/laporan/formtransaksi', [TransaksiController::class, 'formTransaksi'])->name('backend.laporan.formtransaksi')->middleware('auth');
+Route::post('backend/laporan/cetaktransaksi', [TransaksiController::class, 'cetakTransaksi'])->name('backend.laporan.cetaktransaksi')->middleware('auth');

@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', $produk->nama_produk . ' - SEP-OKAT')
+@section('title', $produk->nama_produk . ' - Walkway')
 
 @section('content')
 <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
@@ -64,40 +64,19 @@
                 <div class="mb-8">
                     <div class="flex justify-between items-center mb-3">
                         <h3 class="font-bold text-sm uppercase">Pilih Ukuran</h3>
-                        
-                        <!-- Size Chart Tabs -->
-                        <div class="flex gap-2 text-xs font-semibold bg-gray-100 p-1 rounded-lg">
-                            <button type="button" class="size-tab active bg-white shadow-sm px-3 py-1 rounded text-black transition" data-target="EU">EU</button>
-                            <button type="button" class="size-tab px-3 py-1 rounded text-gray-500 hover:text-black transition" data-target="US">US</button>
-                            <button type="button" class="size-tab px-3 py-1 rounded text-gray-500 hover:text-black transition" data-target="CM">CM</button>
-                        </div>
                     </div>
-
-                    <!-- Size Grid EU -->
-                    <div id="size-grid-EU" class="size-grid grid grid-cols-4 md:grid-cols-5 gap-3">
-                        @foreach(['38', '39', '40', '41', '42', '43', '44', '45'] as $size)
+                    <!-- Size Grid -->
+                    <div id="size-grid" class="size-grid grid grid-cols-4 md:grid-cols-5 gap-3">
+                        @php
+                            $ukuranList = $produk->ukuran ? array_map('trim', explode(',', $produk->ukuran)) : ['38', '39', '40', '41', '42'];
+                        @endphp
+                        @foreach($ukuranList as $size)
                         <button type="button" class="size-btn border border-gray-200 rounded-xl py-3 text-sm font-semibold hover:border-black transition focus:outline-none focus:ring-2 focus:ring-black focus:ring-offset-2" data-size="{{ $size }}">
                             {{ $size }}
                         </button>
                         @endforeach
                     </div>
-                    <!-- Size Grid US -->
-                    <div id="size-grid-US" class="size-grid grid grid-cols-4 md:grid-cols-5 gap-3 hidden">
-                        @foreach(['5.5', '6.5', '7', '8', '8.5', '9.5', '10', '11'] as $size)
-                        <button type="button" class="size-btn border border-gray-200 rounded-xl py-3 text-sm font-semibold hover:border-black transition focus:outline-none focus:ring-2 focus:ring-black focus:ring-offset-2" data-size="{{ $size }}">
-                            {{ $size }}
-                        </button>
-                        @endforeach
-                    </div>
-                    <!-- Size Grid CM -->
-                    <div id="size-grid-CM" class="size-grid grid grid-cols-4 md:grid-cols-5 gap-3 hidden">
-                        @foreach(['24', '24.5', '25', '26', '26.5', '27.5', '28', '29'] as $size)
-                        <button type="button" class="size-btn border border-gray-200 rounded-xl py-3 text-sm font-semibold hover:border-black transition focus:outline-none focus:ring-2 focus:ring-black focus:ring-offset-2" data-size="{{ $size }}">
-                            {{ $size }}
-                        </button>
-                        @endforeach
-                    </div>
-                    <p id="size-error" class="text-red-500 text-xs mt-2 hidden">Pilih ukuran sepatu terlebih dahulu.</p>
+                    <p id="size-error" class="text-red-500 text-xs mt-2 hidden">Pilih ukuran terlebih dahulu.</p>
                 </div>
 
                 <!-- Quantity & Actions -->
@@ -163,31 +142,7 @@
         });
     });
 
-    // Size Chart Tabs
-    document.querySelectorAll('.size-tab').forEach(tab => {
-        tab.addEventListener('click', function() {
-            // Reset active tab styling
-            document.querySelectorAll('.size-tab').forEach(t => {
-                t.classList.remove('bg-white', 'shadow-sm', 'text-black');
-                t.classList.add('text-gray-500');
-            });
-            this.classList.remove('text-gray-500');
-            this.classList.add('bg-white', 'shadow-sm', 'text-black');
 
-            // Hide all grids
-            document.querySelectorAll('.size-grid').forEach(g => g.classList.add('hidden'));
-            
-            // Show target grid
-            const target = this.dataset.target;
-            document.getElementById('size-grid-' + target).classList.remove('hidden');
-
-            // Reset selection
-            document.querySelectorAll('.size-btn').forEach(b => {
-                b.classList.remove('border-black', 'bg-black', 'text-white');
-            });
-            document.getElementById('input_ukuran').value = '';
-        });
-    });
 
     // Quantity Logic
     let qty = 1;
